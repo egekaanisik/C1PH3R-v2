@@ -505,7 +505,7 @@ public class Cipher2 {
 	    		if(!(cipher.getText().length() > 0))
 	    				return;
 	    		fileChooser.setDialogTitle("Enter a file name to export.");
-	    		int returnVal = fileChooser.showOpenDialog(f);
+	    		int returnVal = fileChooser.showSaveDialog(f);
 	    		
 	    		if(returnVal == JFileChooser.APPROVE_OPTION) {
 	    			File f = fileChooser.getSelectedFile();
@@ -933,7 +933,7 @@ public class Cipher2 {
 	    		if(!(plain.getText().length() > 0))
 	    				return;
 	    		fileChooser.setDialogTitle("Enter a file name to export.");
-	    		int returnVal = fileChooser.showOpenDialog(f);
+	    		int returnVal = fileChooser.showSaveDialog(f);
 	    		
 	    		if(returnVal == JFileChooser.APPROVE_OPTION) {
 	    			File f = fileChooser.getSelectedFile();
