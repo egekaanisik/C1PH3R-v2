@@ -143,6 +143,7 @@ public class Cipher2 {
 		key.setBounds(25,50,430,20);
 		key.setHorizontalAlignment(JTextField.CENTER);
 		key.setBackground(Color.LIGHT_GRAY);
+		key.setFont(new Font("Consolas", Font.PLAIN, 12));
 		if(!filePath.equals("default")) {
 			key.setText(file.getAbsolutePath());
 		} else {
@@ -226,6 +227,7 @@ public class Cipher2 {
 		plain.setForeground(Color.BLACK);
 		plain.setLineWrap(true);
 		plain.setWrapStyleWord(true);
+		plain.setFont(new Font("Consolas", Font.PLAIN, 12));
 		plain.setBorder(BorderFactory.createCompoundBorder(border,BorderFactory.createEmptyBorder(4, 4, 4, 4)));
 		
 		JScrollPane plainScr = new JScrollPane(plain);
@@ -303,6 +305,7 @@ public class Cipher2 {
 		cipher.setForeground(Color.BLACK);
 		cipher.setLineWrap(true);
 		cipher.setEditable(false);
+		cipher.setFont(new Font("Consolas", Font.PLAIN, 12));
 		cipher.setBorder(BorderFactory.createCompoundBorder(border,BorderFactory.createEmptyBorder(4, 4, 4, 4)));
 		
 		JScrollPane cipherScr = new JScrollPane(cipher);
@@ -611,6 +614,7 @@ public class Cipher2 {
 		key.setBounds(25,50,430,20);
 		key.setHorizontalAlignment(JTextField.CENTER);
 		key.setBackground(Color.LIGHT_GRAY);
+		key.setFont(new Font("Consolas", Font.PLAIN, 12));
 		if(!filePath.equals("default")) {
 			key.setText(file.getAbsolutePath());
 		} else {
@@ -665,6 +669,7 @@ public class Cipher2 {
 		plain.setLineWrap(true);
 		plain.setEditable(false);
 		plain.setWrapStyleWord(true);
+		plain.setFont(new Font("Consolas", Font.PLAIN, 12));
 		plain.setBorder(BorderFactory.createCompoundBorder(border,BorderFactory.createEmptyBorder(4, 4, 4, 4)));
 		
 		JScrollPane plainScr = new JScrollPane(plain);
@@ -700,6 +705,7 @@ public class Cipher2 {
 		cipher.setBackground(Color.LIGHT_GRAY);
 		cipher.setForeground(Color.BLACK);
 		cipher.setLineWrap(true);
+		cipher.setFont(new Font("Consolas", Font.PLAIN, 12));
 		cipher.setBorder(BorderFactory.createCompoundBorder(border,BorderFactory.createEmptyBorder(4, 4, 4, 4)));
 		
 		JScrollPane cipherScr = new JScrollPane(cipher);

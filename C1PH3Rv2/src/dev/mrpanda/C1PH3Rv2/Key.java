@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Scanner;
+import java.util.Random;
 
 public class Key {
 	private String[] key;
@@ -16,6 +17,7 @@ public class Key {
 	private File keyFile;
 	private int keyIndex = 0;
 	private String firstLine = "";
+	private Random random;
 	
 	/**
 	 * Constructs a key with the given file. If the file has value init, reads the file to create a new key instance from it. If there is no data,
@@ -59,6 +61,11 @@ public class Key {
 		
 		for(int i = 0; i < key.length; i++) {
 			key[i] = getRandomizedChar();
+			
+			if(i == 0) {
+				this.firstLine = key[i];
+				loadSeed();
+			}
 		}
 		
 		return key;
@@ -74,8 +81,11 @@ public class Key {
 		for(int i = 33; i <= 126; i++) {
 			list.add(((char) i));
 		}
-
-		Collections.shuffle(list);
+		
+		if(random == null)
+			Collections.shuffle(list);
+		else
+			Collections.shuffle(list, random);
 		
 		String k = "";
 		for(Character c : list) {
@@ -319,7 +329,14 @@ public class Key {
 		String s = "";
 		
 		for(int i = 0; i < firstLine.length(); i++) {
-			s += getEncryptedValue(firstLine.charAt(i), false);
+			
+			if(type == 0) {
+				s += String.valueOf(firstLine.charAt(i)) + String.valueOf((char)((Math.random() * 94) + 33)) + String.valueOf((char)((Math.random() * 94) + 33));
+			} else if(type == 1) {
+				s += String.valueOf((char)((Math.random() * 94) + 33)) + String.valueOf(firstLine.charAt(i)) + String.valueOf((char)((Math.random() * 94) + 33));
+			} else {
+				s += String.valueOf((char)((Math.random() * 94) + 33)) + String.valueOf((char)((Math.random() * 94) + 33)) + String.valueOf(firstLine.charAt(i));
+			}
 		}
 		resetCounter();
 		
@@ -337,15 +354,36 @@ public class Key {
 		
 		String s = "";
 		
-		for(int i = 0; i < indicator.length() - 2; i += 3) {
-			s += getDecryptedValue(indicator.substring(i, i+3), true);
+		for(int i = 0; i < indicator.length(); i += 3) {
+			s += indicator.charAt(i + type);
 		}
-		resetCounter();
 
 		if(firstLine.equals(s))
 			return true;
 		else
 			return false;
+	}
+	
+	/**
+	 * Loads a seed into a Random instance from the first line of the key.
+	 */
+	public void loadSeed() {
+		long[] seedParts = new long[10];
+		
+		for(int j = 0; j < 10; j++) {
+			String seedStr = "";
+			for(int i = (this.firstLine.length() / 10) * j; i < ((this.firstLine.length() / 10) * (j+1)); i++) {
+				seedStr += String.valueOf(((int)firstLine.charAt(i)) - 33);
+			}
+			seedParts[j] = Long.parseLong(seedStr);
+		}
+		
+		long seed = 0;
+		for(int i = 0; i < seedParts.length; i++) {
+			seed += seedParts[i];
+		}
+
+		this.random = new Random(seed);
 	}
 	
 	/**
@@ -416,8 +454,10 @@ public class Key {
 									break;
 							}
 							
-							if(i == 0)
+							if(i == 0) {
 								this.firstLine = line;
+								loadSeed();
+							}
 									
 							if(!isValid)
 								break;
