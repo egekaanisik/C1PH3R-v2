@@ -329,16 +329,21 @@ public class Key {
 		String s = "";
 		
 		for(int i = 0; i < firstLine.length(); i++) {
+			char ch = firstLine.charAt(i);
+			
+			if(((int) ch) + ((type + 1) * multiplier) > 126)
+				ch = (char)((int)ch - 94);
+			
+			ch = (char)((int)ch + ((type + 1) * multiplier));
 			
 			if(type == 0) {
-				s += String.valueOf(firstLine.charAt(i)) + String.valueOf((char)((Math.random() * 94) + 33)) + String.valueOf((char)((Math.random() * 94) + 33));
+				s += String.valueOf(ch) + String.valueOf((char)((Math.random() * 94) + 33)) + String.valueOf((char)((Math.random() * 94) + 33));
 			} else if(type == 1) {
-				s += String.valueOf((char)((Math.random() * 94) + 33)) + String.valueOf(firstLine.charAt(i)) + String.valueOf((char)((Math.random() * 94) + 33));
+				s += String.valueOf((char)((Math.random() * 94) + 33)) + String.valueOf(ch) + String.valueOf((char)((Math.random() * 94) + 33));
 			} else {
-				s += String.valueOf((char)((Math.random() * 94) + 33)) + String.valueOf((char)((Math.random() * 94) + 33)) + String.valueOf(firstLine.charAt(i));
+				s += String.valueOf((char)((Math.random() * 94) + 33)) + String.valueOf((char)((Math.random() * 94) + 33)) + String.valueOf(ch);
 			}
 		}
-		resetCounter();
 		
 		return s;
 	}
@@ -355,7 +360,14 @@ public class Key {
 		String s = "";
 		
 		for(int i = 0; i < indicator.length(); i += 3) {
-			s += indicator.charAt(i + type);
+			char ch = indicator.charAt(i + type);
+			
+			if(((int) ch) - ((type + 1) * multiplier) < 33)
+				ch = (char)((int)ch + 94);
+			
+			ch = (char)((int)ch - ((type + 1) * multiplier));
+			
+			s += ch;
 		}
 
 		if(firstLine.equals(s))
