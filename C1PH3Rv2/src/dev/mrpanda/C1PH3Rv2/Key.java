@@ -18,6 +18,7 @@ public class Key {
 	private int keyIndex = 0;
 	private String firstLine = "";
 	private Random random;
+	private boolean isValid;
 	
 	/**
 	 * Constructs a key with the given file. If the file has value init, reads the file to create a new key instance from it. If there is no data,
@@ -30,18 +31,21 @@ public class Key {
 		Scanner in = new Scanner(keyFile);
 		
 		if(in.hasNext()) {
-			if(isValid()) {
+			if(validate()) {
+				isValid = true;
 				in.nextLine();
 				key = new String[51];
 				for(int i = 1; i < 52; i++) {
 					this.key[i-1] = in.nextLine();
 				}
 			} else {
+				isValid = false;
 				in.close();
 				return;
 			}
 		} else {
 			this.key = getKey(false);
+			isValid = true;
 			
 			FileWriter writer = new FileWriter(keyFile);
 			writer.write(toString());
@@ -393,7 +397,7 @@ public class Key {
 	/**
 	 * Loads a seed into a Random instance from the first line of the key.
 	 */
-	public void loadSeed() {
+	private void loadSeed() {
 		long[] seedParts = new long[10];
 		
 		for(int j = 0; j < 10; j++) {
@@ -413,11 +417,19 @@ public class Key {
 	}
 	
 	/**
-	 * Checks the key for being valid.
+	 * Returns if the already created key is valid.
+	 * @return true if the key is valid, false otherwise
+	 */
+	public boolean isValid() {
+		return isValid;
+	}
+	
+	/**
+	 * Validates the key for being equal to a constructed one.
 	 * @return true if the key is valid, false otherwise
 	 * @throws FileNotFoundException : if the key file is not found, throws
 	 */
-	public boolean isValid() throws FileNotFoundException {
+	private boolean validate() throws FileNotFoundException {
 		if(keyFile.getAbsolutePath().length() < 4) {
 			return false;
 		} else if(!keyFile.getAbsolutePath().substring(keyFile.getAbsolutePath().length()-3).equals("txt")) {
@@ -451,7 +463,26 @@ public class Key {
 		lines.remove(0);
 		lines.remove(51);
 		
-		this.firstLine = lines.get(0);
+		String firstLine = lines.get(0);
+		
+		if(firstLine.length() != 94)
+			return false;
+		
+		for(int i = 0; i < firstLine.length(); i++) {
+			char currentChar = firstLine.charAt(i);
+			
+			for(int j = 0; j < firstLine.length(); j++) {
+				if(j == i)
+					continue;
+			
+				if(firstLine.charAt(j) == currentChar) {
+					System.out.println(currentChar);
+					return false;
+				}
+			}
+		}
+		
+		this.firstLine = firstLine;
 		loadSeed();
 		
 		String[] keyLines = getKey(true);

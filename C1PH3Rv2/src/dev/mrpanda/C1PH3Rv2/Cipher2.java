@@ -10,7 +10,6 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.net.URI;
@@ -452,28 +451,23 @@ public class Cipher2 {
 					e1.printStackTrace();
 				}
 				
-				try {
-					if(!k.isValid()) {
-						invalid.setText("Invalid Key.");
+				if(!k.isValid()) {
+					invalid.setText("Invalid Key.");
 						
-						ActionListener listener = new ActionListener(){
-					        public void actionPerformed(ActionEvent event){
-					            invalid.setText("");
-					        }
-					    };
+					ActionListener listener = new ActionListener(){
+						public void actionPerformed(ActionEvent event){
+							invalid.setText("");
+						}
+					};
 					    
-						Timer timer = new Timer(1000, listener);
-					    timer.setRepeats(false);
-					    timer.start();
-						return;
-					} else {
-						invalid.setText("");
-					}
-				} catch (FileNotFoundException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
+					Timer timer = new Timer(1000, listener);
+					timer.setRepeats(false);
+					timer.start();
+					return;
+				} else {
+					invalid.setText("");
 				}
-				
+
 				String p = plain.getText().trim();
 				
 				Encrypt enc = new Encrypt(p, k);
@@ -883,26 +877,21 @@ public class Cipher2 {
 					e1.printStackTrace();
 				}
 				
-				try {
-					if(!k.isValid()) {
-						invalid.setText("Invalid Key.");
+				if(!k.isValid()) {
+					invalid.setText("Invalid Key.");
 						
-						ActionListener listener = new ActionListener(){
-					        public void actionPerformed(ActionEvent event){
-					            invalid.setText("");
-					        }
-					    };
+					ActionListener listener = new ActionListener(){
+						public void actionPerformed(ActionEvent event){
+							invalid.setText("");
+						}
+					};
 					    
-						Timer timer = new Timer(1000, listener);
-					    timer.setRepeats(false);
-					    timer.start();
-						return;
-					} else {
-						invalid.setText("");
-					}
-				} catch (FileNotFoundException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
+					Timer timer = new Timer(1000, listener);
+					timer.setRepeats(false);
+					timer.start();
+					return;
+				} else {
+					invalid.setText("");
 				}
 				
 				String p = cipher.getText().trim();
