@@ -134,6 +134,9 @@ public class Cipher2 {
 		
 		Border border = BorderFactory.createLineBorder(Color.WHITE);
 		
+		FileNameExtensionFilter textFilter = new FileNameExtensionFilter("Text File (.txt)", "txt");
+		FileNameExtensionFilter keyFilter = new FileNameExtensionFilter("Key File (.mrpdk)", "mrpdk");
+		
 		JLabel keyAsk = new JLabel("Key Path:");
 		keyAsk.setBounds(25,20,60,20);
 		keyAsk.setForeground(Color.WHITE);
@@ -168,13 +171,15 @@ public class Cipher2 {
 	    select.addActionListener(new ActionListener() {
 	    	public void actionPerformed(ActionEvent e) {
 	    		fileChooser.setDialogTitle("To generate a key, enter a file name into the box.");
+	    		fileChooser.resetChoosableFileFilters();
+	    		fileChooser.setFileFilter(keyFilter);
 	    		int returnVal = fileChooser.showOpenDialog(f);
 	    		
 	    		if(returnVal == JFileChooser.APPROVE_OPTION) {
 	    			file = fileChooser.getSelectedFile();
 
-	    			if(!file.getAbsolutePath().substring(file.getAbsolutePath().length()-4).equals(".txt")) {
-	    				file = new File(file.getAbsolutePath() + ".txt");
+	    			if(!file.getAbsolutePath().substring(file.getAbsolutePath().length()-6).equals(".mrpdk")) {
+	    				file = new File(file.getAbsolutePath() + ".mrpdk");
 	    			}
 	    			
 	    			filePath = file.getAbsolutePath();
@@ -261,6 +266,8 @@ public class Cipher2 {
 	    textSelect.addActionListener(new ActionListener() {
 	    	public void actionPerformed(ActionEvent e) {
 	    		fileChooser.setDialogTitle("Select a plaintext file.");
+	    		fileChooser.resetChoosableFileFilters();
+	    		fileChooser.setFileFilter(textFilter);
 	    		int returnVal = fileChooser.showOpenDialog(f);
 	    		
 	    		if(returnVal == JFileChooser.APPROVE_OPTION) {
@@ -502,6 +509,8 @@ public class Cipher2 {
 	    		if(!(cipher.getText().length() > 0))
 	    				return;
 	    		fileChooser.setDialogTitle("Enter a file name to export.");
+	    		fileChooser.resetChoosableFileFilters();
+	    		fileChooser.setFileFilter(textFilter);
 	    		int returnVal = fileChooser.showSaveDialog(f);
 	    		
 	    		if(returnVal == JFileChooser.APPROVE_OPTION) {
@@ -600,6 +609,9 @@ public class Cipher2 {
 		
 		Border border = BorderFactory.createLineBorder(Color.WHITE);
 		
+		FileNameExtensionFilter textFilter = new FileNameExtensionFilter("Text File (.txt)", "txt");
+		FileNameExtensionFilter keyFilter = new FileNameExtensionFilter("Key File (.mrpdk)", "mrpdk");
+		
 		JLabel keyAsk = new JLabel("Key Path:");
 		keyAsk.setBounds(25,20,60,20);
 		keyAsk.setForeground(Color.WHITE);
@@ -634,13 +646,15 @@ public class Cipher2 {
 	    select.addActionListener(new ActionListener() {
 	    	public void actionPerformed(ActionEvent e) {
 	    		fileChooser.setDialogTitle("Select a key file.");
+	    		fileChooser.resetChoosableFileFilters();
+	    		fileChooser.setFileFilter(keyFilter);
 	    		int returnVal = fileChooser.showOpenDialog(f);
 	    		
 	    		if(returnVal == JFileChooser.APPROVE_OPTION) {
 	    			file = fileChooser.getSelectedFile();
 	    			
-	    			if(!file.getAbsolutePath().substring(file.getAbsolutePath().length()-4).equals(".txt")) {
-	    				file = new File(file.getAbsolutePath() + ".txt");
+	    			if(!file.getAbsolutePath().substring(file.getAbsolutePath().length()-6).equals(".mrpdk")) {
+	    				file = new File(file.getAbsolutePath() + ".mrpdk");
 	    			}
 	    			
 	    			filePath = file.getAbsolutePath();
@@ -734,6 +748,8 @@ public class Cipher2 {
 	    textSelect.addActionListener(new ActionListener() {
 	    	public void actionPerformed(ActionEvent e) {
 	    		fileChooser.setDialogTitle("Select a ciphertext file.");
+	    		fileChooser.resetChoosableFileFilters();
+	    		fileChooser.setFileFilter(textFilter);
 	    		int returnVal = fileChooser.showOpenDialog(f);
 	    		
 	    		if(returnVal == JFileChooser.APPROVE_OPTION) {
@@ -928,6 +944,8 @@ public class Cipher2 {
 	    		if(!(plain.getText().length() > 0))
 	    				return;
 	    		fileChooser.setDialogTitle("Enter a file name to export.");
+	    		fileChooser.resetChoosableFileFilters();
+	    		fileChooser.setFileFilter(textFilter);
 	    		int returnVal = fileChooser.showSaveDialog(f);
 	    		
 	    		if(returnVal == JFileChooser.APPROVE_OPTION) {
@@ -1030,8 +1048,6 @@ public class Cipher2 {
 		f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 			
 		fileChooser = new JFileChooser();
-		FileNameExtensionFilter filter = new FileNameExtensionFilter("Text File (.txt)", "txt");
-		fileChooser.setFileFilter(filter);
 		fileChooser.setAcceptAllFileFilterUsed(false);
 		fileChooser.setCurrentDirectory(new File(System.getProperty("user.home") + "/Desktop"));
 		

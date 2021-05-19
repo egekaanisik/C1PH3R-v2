@@ -430,9 +430,9 @@ public class Key {
 	 * @throws FileNotFoundException : if the key file is not found, throws
 	 */
 	private boolean validate() throws FileNotFoundException {
-		if(keyFile.getAbsolutePath().length() < 4) {
+		if(keyFile.getAbsolutePath().length() < 6) {
 			return false;
-		} else if(!keyFile.getAbsolutePath().substring(keyFile.getAbsolutePath().length()-3).equals("txt")) {
+		} else if(!keyFile.getAbsolutePath().substring(keyFile.getAbsolutePath().length()-5).equals("mrpdk")) {
 			return false;
 		} else if(!keyFile.exists()){
 			return false;
