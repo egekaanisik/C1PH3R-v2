@@ -41,7 +41,7 @@ public class Key {
 				return;
 			}
 		} else {
-			this.key = getKey();
+			this.key = getKey(false);
 			
 			FileWriter writer = new FileWriter(keyFile);
 			writer.write(toString());
@@ -54,19 +54,33 @@ public class Key {
 	
 	/**
 	 * Returns a random key block with 51 keys init.
+	 * @param isForCheck : an indicator that states if the key for is checking
 	 * @return a unique key
 	 */
-	private String[] getKey() {
+	private String[] getKey(boolean isForCheck) {
 		String[] key = new String[51];
 		
-		for(int i = 0; i < key.length; i++) {
+		int i;
+		
+		if(isForCheck) {
+			key[0] = this.firstLine;
+			i = 1;
+			
+		} else
+			i = 0;
+		
+		while(i < key.length) {
 			key[i] = getRandomizedChar();
 			
 			if(i == 0) {
 				this.firstLine = key[i];
 				loadSeed();
 			}
+			
+			i++;
 		}
+		
+		loadSeed();
 		
 		return key;
 	}
@@ -404,7 +418,7 @@ public class Key {
 	 * @throws FileNotFoundException : if the key file is not found, throws
 	 */
 	public boolean isValid() throws FileNotFoundException {
-		if(keyFile.getAbsolutePath().length() < 5) {
+		if(keyFile.getAbsolutePath().length() < 4) {
 			return false;
 		} else if(!keyFile.getAbsolutePath().substring(keyFile.getAbsolutePath().length()-3).equals("txt")) {
 			return false;
@@ -414,75 +428,39 @@ public class Key {
 		
 		Scanner file = new Scanner(keyFile);
 		
-		boolean isValid = true;
-			
-		int count = 0;
-		while(file.hasNextLine()) {
-			file.nextLine();
-			count++;
-		}
-			
-		if(count != 53) {
-			isValid = false;
-		} else {
+		if(!file.hasNext()) {
 			file.close();
-			file = new Scanner(keyFile);
-				
-			String firstLine = file.nextLine();
-				
-			if(firstLine.equals("-------------------------------------------KEY BEGIN-------------------------------------------")) {
-				List<Character> list = new ArrayList<Character>();
-					
-				for(int i = 33; i <= 126; i++) {
-					list.add((char)(i));
-				}
-					
-				for(int i = 0; i < 52; i++) {
-					String line = file.nextLine();
-					if(i == 51) {
-						if(!line.equals("--------------------------------------------KEY END--------------------------------------------")) {
-							isValid = false;
-							break;
-						}
-					} else {
-						if(line.length() != 94) {
-							isValid = false;
-							break;
-						} else {
-							for(int j = 0; j < 94; j++) {
-								if(!list.contains(line.charAt(j))) {
-									isValid = false;
-									break;
-								}
-								
-								for(int r = 0; r < j; r++) {
-									if(line.charAt(r) == line.charAt(j)) {
-										isValid = false;
-										break;
-									}
-								}
-								
-								if(!isValid)
-									break;
-							}
-							
-							if(i == 0) {
-								this.firstLine = line;
-								loadSeed();
-							}
-									
-							if(!isValid)
-								break;
-						}
-					}
-				}
-			} else {
-				isValid = false;
-			}
+			return false;
 		}
-			
+		
+		List<String> lines = new ArrayList<String>();
+		
+		while(file.hasNextLine()) {
+			lines.add(file.nextLine());
+		}
+		
 		file.close();
-			
-		return isValid;
+				
+		if(lines.size() != 53)
+			return false;
+		else if(!lines.get(0).equals("-------------------------------------------KEY BEGIN-------------------------------------------"))
+			return false;
+		else if(!lines.get(52).equals("--------------------------------------------KEY END--------------------------------------------"))
+			return false;
+		
+		lines.remove(0);
+		lines.remove(51);
+		
+		this.firstLine = lines.get(0);
+		loadSeed();
+		
+		String[] keyLines = getKey(true);
+		
+		for(int i = 0; i < 51; i++) {
+			if(!keyLines[i].equals(lines.get(i)))
+				return false;
+		}
+		
+		return true;
 	}
 }
