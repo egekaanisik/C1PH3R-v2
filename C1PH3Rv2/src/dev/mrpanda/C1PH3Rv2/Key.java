@@ -344,15 +344,36 @@ public class Key {
 	 * @return the key indicator
 	 */
 	public String getKeyIndicator() {
+		String seedCode = "mrpd";
+		String seedStr = "";
+		
+		for(int i = 0; i < seedCode.length(); i++) {
+			seedStr += (int)seedCode.charAt(i);
+		}
+		
+		long seed = Long.parseLong(seedStr);
+		
+		List<Character> list = new ArrayList<Character>();
+		
+		for(int i = 33; i <= 126; i++) {
+			list.add(((char) i));
+		}
+		
+		Collections.shuffle(list, new Random(seed));
+		
 		String s = "";
 		
 		for(int i = 0; i < firstLine.length(); i++) {
 			char ch = firstLine.charAt(i);
 			
-			if(((int) ch) + ((type + 1) * multiplier) > 126)
+			if(((int)ch) + ((type + 1) * multiplier) > 126)
 				ch = (char)((int)ch - 94);
 			
 			ch = (char)((int)ch + ((type + 1) * multiplier));
+			
+			int index = (int)ch - 33;
+			
+			ch = list.get(index);
 			
 			if(type == 0) {
 				s += String.valueOf(ch) + String.valueOf((char)((Math.random() * 94) + 33)) + String.valueOf((char)((Math.random() * 94) + 33));
@@ -375,12 +396,36 @@ public class Key {
 		if(indicator.length() != 282)
 			return false;
 		
+		String seedCode = "mrpd";
+		String seedStr = "";
+		
+		for(int i = 0; i < seedCode.length(); i++) {
+			seedStr += (int)seedCode.charAt(i);
+		}
+		
+		long seed = Long.parseLong(seedStr);
+		
+		List<Character> list = new ArrayList<Character>();
+		
+		for(int i = 33; i <= 126; i++) {
+			list.add(((char) i));
+		}
+		
+		Collections.shuffle(list, new Random(seed));
+		
 		String s = "";
 		
 		for(int i = 0; i < indicator.length(); i += 3) {
 			char ch = indicator.charAt(i + type);
 			
-			if(((int) ch) - ((type + 1) * multiplier) < 33)
+			for(int j = 0; j < list.size(); j++) {
+				if(ch == list.get(j)) {
+					ch = (char)(j + 33);
+					break;
+				}
+			}
+			
+			if(((int)ch) - ((type + 1) * multiplier) < 33)
 				ch = (char)((int)ch + 94);
 			
 			ch = (char)((int)ch - ((type + 1) * multiplier));
@@ -475,8 +520,7 @@ public class Key {
 				if(j == i)
 					continue;
 			
-				if(firstLine.charAt(j) == currentChar) {
-					System.out.println(currentChar);
+				if(firstLine.charAt(j) == currentChar || (int)firstLine.charAt(j) < 33 || (int)firstLine.charAt(j) > 126) {
 					return false;
 				}
 			}
