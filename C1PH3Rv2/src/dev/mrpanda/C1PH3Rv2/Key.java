@@ -57,6 +57,91 @@ public class Key {
 	}
 	
 	/**
+	 * Constructs a key but does not saves it.
+	 */
+	public Key() {
+		this.key = getKey(false);
+		isValid = true;
+	}
+	
+	/**
+	 * Constructs a key with an already created key array.
+	 * @param key : already created key array
+	 */
+	public Key(String[] key) {
+		this.key = key;
+		this.firstLine = key[0];
+		loadSeed();
+		isValid = true;
+	}
+	
+	/**
+	 * Constructs a key with the first line of key.
+	 * @param indicator : the key indicator
+	 * @param typeIndicator : the type indicator
+	 * @throws Exception 
+	 */
+	public Key(String indicator, char typeIndicator, char multiplierIndicator) throws Exception {
+		setFirstLine(indicator, typeIndicator, multiplierIndicator);
+		loadSeed();
+		this.key = getKey(true);
+		isValid = true;
+	}
+	
+	/**
+	 * Sets the first line of the key to use it as seed.
+	 * @param indicator : the key indicator
+	 * @param typeIndicator : the type indicator
+	 * @throws Exception 
+	 */
+	private void setFirstLine(String indicator, char typeIndicator, char multiplierIndicator) throws Exception {
+		setType(typeIndicator);
+		setMultiplier(multiplierIndicator);
+		
+		if(indicator.length() != 282)
+			throw new Exception();
+		
+		String seedCode = "mrpd";
+		String seedStr = "";
+		
+		for(int i = 0; i < seedCode.length(); i++) {
+			seedStr += (int)seedCode.charAt(i);
+		}
+		
+		long seed = Long.parseLong(seedStr);
+		
+		List<Character> list = new ArrayList<Character>();
+		
+		for(int i = 33; i <= 126; i++) {
+			list.add(((char) i));
+		}
+		
+		Collections.shuffle(list, new Random(seed));
+		
+		String s = "";
+		
+		for(int i = 0; i < indicator.length(); i += 3) {
+			char ch = indicator.charAt(i + type);
+			
+			for(int j = 0; j < list.size(); j++) {
+				if(ch == list.get(j)) {
+					ch = (char)(j + 33);
+					break;
+				}
+			}
+			
+			if(((int)ch) - ((type + 1) * multiplier) < 33)
+				ch = (char)((int)ch + 94);
+			
+			ch = (char)((int)ch - ((type + 1) * multiplier));
+			
+			s += ch;
+		}
+		
+		this.firstLine = s;
+	}
+	
+	/**
 	 * Returns a random key block with 51 keys init.
 	 * @param isForCheck : an indicator that states if the key for is checking
 	 * @return a unique key
@@ -116,10 +201,9 @@ public class Key {
 	/**
 	 * Encrypts the given character with the key.
 	 * @param c : character to be encrypted
-	 * @param isFirst : is it the first round of encryption
 	 * @return a 3-character encrypted string block
 	 */
-	public String getEncryptedValue(char c, boolean isFirst) {
+	public String getEncryptedValue(char c) {
 		String toReturn;
 		char value = 0;
 		
@@ -131,14 +215,22 @@ public class Key {
 			value = (char)((int)value + ((type + 1) * multiplier));
 			if(value > 126)
 				value = (char)((int)value - 94);
+			
+			index = (int) value - 33;
+			
+			int keyIn = ((keyIndex * 3) + type) - 1;
+			if(keyIn == -1)
+				keyIn = key.length - 1;
+			
+			value = key[keyIn].charAt(index);
+			value = (char)((int)value + ((type + 1) * multiplier));
+			if(value > 126)
+				value = (char)((int)value - 94);
+			
 		} else if((int) c == 10){
-			value = '\u00B5';
-		} else if((int) c == 32){
-			value = '\u00A1';
-		} else if(c == '\u00A1'){
-			value = '\u00A3';
-		} else if(c == '\u00B5') {
 			value = '\u00B1';
+		} else if((int) c == 32){
+			value = '\u00A3';
 		}
 		
 		if(type == 0) {
@@ -149,33 +241,17 @@ public class Key {
 			toReturn = String.valueOf((char)((Math.random() * 94) + 33)) + String.valueOf((char)((Math.random() * 94) + 33)) + String.valueOf(value);
 		}
 		
-		if(isFirst) {
-			if(multiplier == 1) {
-				if(keyIndex + 1 == 17) {
-					keyIndex = 0;
-				} else {
-					keyIndex++;
-				}
+		if(multiplier == 1) {
+			if(keyIndex + 1 == 17) {
+				keyIndex = 0;
 			} else {
-				if(keyIndex + 2 > 16) {
-					keyIndex = 0;
-				} else {
-					keyIndex += 2;
-				}
+				keyIndex++;
 			}
 		} else {
-			if(multiplier == 2) {
-				if(keyIndex + 1 == 17) {
-					keyIndex = 0;
-				} else {
-					keyIndex++;
-				}
+			if(keyIndex + 2 > 16) {
+				keyIndex = 0;
 			} else {
-				if(keyIndex + 2 > 16) {
-					keyIndex = 0;
-				} else {
-					keyIndex += 2;
-				}
+				keyIndex += 2;
 			}
 		}
 		
@@ -185,16 +261,33 @@ public class Key {
 	/**
 	 * Decrypts the given character with the key.
 	 * @param chunk : 3-character block to be decrypted
-	 * @param isFirst : is it the first round of decryption
 	 * @return the original character value
 	 */
-	public String getDecryptedValue(String chunk, boolean isFirst) {
+	public String getDecryptedValue(String chunk) {
 		String toReturn = null;
-		char value = chunk.charAt(type);
+		char ch = chunk.charAt(type);
 		
-		int index = (keyIndex * 3) + type;
+		int index = ((keyIndex * 3) + type - 1);
+		if(index == -1)
+			index = key.length - 1;
 		
-		if(((int) value) >= 33 && ((int) value) <= 126) {
+		if(((int) ch) >= 33 && ((int) ch) <= 126) {
+			ch = (char)((int)ch - ((type + 1) * multiplier));
+			if(ch < 33)
+				ch = (char)((int)ch + 94);
+			
+			char value = 0;
+			
+			for(int i = 0; i < key[index].length(); i++) {
+				if(key[index].charAt(i) == ch) {
+					value = (char)(i + 33);
+				} else {
+					continue;
+				}
+			}
+			
+			index = (keyIndex * 3) + type;
+			
 			value = (char)((int)value - ((type + 1) * multiplier));
 			if(value < 33)
 				value = (char)((int)value + 94);
@@ -206,43 +299,23 @@ public class Key {
 					continue;
 				}
 			}
-		} else if(value == '\u00B1'){
-			toReturn = "\u00B5";
-		} else if(value == '\u00A3'){
-			toReturn = "\u00A1";
-		} else if(value == '\u00B5'){
+		} else if(ch == '\u00B1'){
 			toReturn = "\n";
-		} else if(value == '\u00A1') {
+		} else if(ch == '\u00A3') {
 			toReturn = " ";
 		}
 		
-		if(isFirst) {
-			if(multiplier == 2) {
-				if(keyIndex + 1 == 17) {
-					keyIndex = 0;
-				} else {
-					keyIndex++;
-				}
+		if(multiplier == 1) {
+			if(keyIndex + 1 == 17) {
+				keyIndex = 0;
 			} else {
-				if(keyIndex + 2 > 16) {
-					keyIndex = 0;
-				} else {
-					keyIndex += 2;
-				}
+				keyIndex++;
 			}
 		} else {
-			if(multiplier == 1) {
-				if(keyIndex + 1 == 17) {
-					keyIndex = 0;
-				} else {
-					keyIndex++;
-				}
+			if(keyIndex + 2 > 16) {
+				keyIndex = 0;
 			} else {
-				if(keyIndex + 2 > 16) {
-					keyIndex = 0;
-				} else {
-					keyIndex += 2;
-				}
+				keyIndex += 2;
 			}
 		}
 		
@@ -322,13 +395,6 @@ public class Key {
 	 */
 	public void setMultiplier() {
 		multiplier = (int)(Math.random() * 2) + 1;
-	}
-	
-	/**
-	 * Resets the key index counter.
-	 */
-	public void resetCounter() {
-		this.keyIndex = 0;
 	}
 	
 	/**
@@ -537,5 +603,21 @@ public class Key {
 		}
 		
 		return true;
+	}
+	
+	/**
+	 * Makes a copy of the current Key instance.
+	 * @return copy of the Key
+	 */
+	public Key copy() {
+		if(keyFile == null) {
+			return new Key(key);
+		} else {
+			try {
+				return new Key(keyFile);
+			} catch (IOException e) {
+				return null;
+			}
+		}
 	}
 }

@@ -1,5 +1,6 @@
 package dev.mrpanda.C1PH3Rv2;
 
+
 public class Encrypt {
 	private String cipher;
 	private boolean isValid = true;
@@ -10,7 +11,7 @@ public class Encrypt {
 	 * @param key : key to be encrypted with
 	 */
 	public Encrypt(String plain, Key key) {
-		if(plain.length() == 0 || !plain.matches("\\A\\p{ASCII}*\\z")) {
+		if(!plain.matches("\\A\\p{ASCII}*\\z")) {
 			this.isValid = false;
 			return;
 		}
@@ -19,16 +20,10 @@ public class Encrypt {
 		key.setMultiplier();
 		
 		cipher = "#";
-		String temp = "";
 		
 		for(int i = 0; i < plain.length(); i++)
-			temp += key.getEncryptedValue(plain.charAt(i), true);
-		key.resetCounter();
-		
-		for(int i = 0; i < temp.length(); i++)
-			cipher += key.getEncryptedValue(temp.charAt(i), false);
-		key.resetCounter();
-		
+			cipher += key.getEncryptedValue(plain.charAt(i));
+
 		cipher += key.getKeyIndicator() + String.valueOf(key.getMultiplierIndicator()) + String.valueOf(key.getTypeIndicator()) + "#";
 	}
 	

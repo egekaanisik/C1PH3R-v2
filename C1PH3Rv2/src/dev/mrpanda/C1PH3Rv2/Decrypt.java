@@ -1,5 +1,6 @@
 package dev.mrpanda.C1PH3Rv2;
 
+
 public class Decrypt {
 	private String plain;
 	private boolean isValid = true;
@@ -10,7 +11,7 @@ public class Decrypt {
 	 * @param key : key to be decrypted with
 	 */
 	public Decrypt(String cipher, Key key) {
-		if(!(cipher.length() > 294)) {
+		if(!(cipher.length() > 288)) {
 			this.isValid = false;
 			return;
 		} else if(!(cipher.charAt(0) == '#' && cipher.charAt(cipher.length() - 1) == '#' &&
@@ -26,7 +27,7 @@ public class Decrypt {
 		if(!key.checkKeyIndicator(cipher.substring(cipher.length() - 285, cipher.length() - 3))) {
 			this.isValid = false;
 			return;
-		} else if(cipher.substring(1, cipher.length() - 285).length() % 9 != 0) {
+		} else if(cipher.substring(1, cipher.length() - 285).length() % 3 != 0) {
 			this.isValid = false;
 			return;
 		}
@@ -39,15 +40,9 @@ public class Decrypt {
 		}
 		
 		plain = "";
-		String temp = "";
 		
 		for(int i = 1; i < cipher.length() - 285; i += 3)
-			temp += key.getDecryptedValue(cipher.substring(i, i+3), true);
-		key.resetCounter();
-		
-		for(int i = 0; i < temp.length() - 2; i += 3)
-			plain += key.getDecryptedValue(temp.substring(i, i+3), false);
-		key.resetCounter();
+			plain += key.getDecryptedValue(cipher.substring(i, i+3));
 	}
 	
 	/**
