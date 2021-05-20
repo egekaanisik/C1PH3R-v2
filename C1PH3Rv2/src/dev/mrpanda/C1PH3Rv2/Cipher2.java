@@ -149,7 +149,7 @@ public class Cipher2 {
 		if(!filePath.equals("default")) {
 			key.setText(file.getAbsolutePath());
 		} else {
-			key.setText("No key file has chosen. To generate, enter a file name on the dialog.");
+			key.setText("No key file has chosen.");
 		}
 		key.setBorder(BorderFactory.createCompoundBorder(border,BorderFactory.createEmptyBorder(2, 2, 2, 2)));
 		key.setEditable(false);
