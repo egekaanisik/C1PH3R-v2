@@ -11,7 +11,7 @@ public class Encrypt {
 	 * @param key : key to be encrypted with
 	 */
 	public Encrypt(String plain, Key key) {
-		if(!plain.matches("\\A\\p{ASCII}*\\z")) {
+		if(plain.length() == 0 || !plain.matches("\\A\\p{ASCII}*\\z")) {
 			this.isValid = false;
 			return;
 		}
