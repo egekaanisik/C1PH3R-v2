@@ -6,8 +6,8 @@ This is the improved version of my [C1PH3R project](https://github.com/egekaanis
 
 There are 2 options:
 
-1. By running directly run the [Cipher2.java](C1PH3Rv2/src/dev/mrpanda/C1PH3Rv2/Cipher2.java).
-2. By creating a runnable JAR file with a starting point of [Cipher2.java](C1PH3Rv2/src/dev/mrpanda/C1PH3Rv2/Cipher2.java).
+- By directly running the [Cipher2.java](C1PH3Rv2/src/dev/mrpanda/C1PH3Rv2/Cipher2.java).
+- By creating a runnable JAR file with a starting point of [Cipher2.java](C1PH3Rv2/src/dev/mrpanda/C1PH3Rv2/Cipher2.java).
 
 ## Welcome Screen
 
@@ -72,12 +72,3 @@ The algorithm checks the last characters of the ciphertext to understand the enc
 </p>
 
 The decryption GUI consists of the same elements with the encryption GUI, but this time, the user cannot create a key or cannot enter a text with spaces into the ciphertext input area. Apart from these, same rules apply for each part.
-
-
-
-
-
-
-
-
-
