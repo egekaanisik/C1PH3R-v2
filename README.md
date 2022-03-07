@@ -68,7 +68,7 @@ The algorithm checks the last characters of the ciphertext to understand the enc
 ### Decryption GUI
 
 <p align="center">
-<img width="400" src=https://user-images.githubusercontent.com/66966617/157050310-62a960c8-17ef-4a06-a786-ae5e5fe09859.png>
+<img width="400" src=https://user-images.githubusercontent.com/66966617/157086426-d11cd388-cf11-4845-bc61-c18eca82e656.png>
 </p>
 
 The decryption GUI consists of the same elements with the encryption GUI, but this time, the user cannot create a key or cannot enter a text with spaces into the ciphertext input area. Apart from these, same rules apply for each part.
